@@ -9,6 +9,8 @@ import com.apps.ngenge.bakingapp.R;
 import com.apps.ngenge.bakingapp.models.Recipe;
 import com.apps.ngenge.bakingapp.retro_service.MiriamRecipeService;
 
+import java.util.List;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,19 +41,19 @@ public class RecipeListActivity extends AppCompatActivity {
 
         MiriamRecipeService service = retrofit.create(MiriamRecipeService.class);
 
-        Call<Recipe> call = service.listOfRecipes();
-        call.enqueue(new Callback<Recipe>() {
+        Call<List<Recipe>> call = service.listOfRecipes();
+        call.enqueue(new Callback<List<Recipe>>() {
             @Override
-            public void onResponse(Call<Recipe> call, Response<Recipe> response) {
-                Recipe recipe = response.body();
-                Log.d("RetroRecipe",recipe.toString());
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                System.out.println("Successful call to service :"+ response.body().size());
             }
 
             @Override
-            public void onFailure(Call<Recipe> call, Throwable t) {
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
 
-                Log.e("RetroErrot",t.getMessage());
+                System.out.println("Failed to call service:"+ t.getMessage());
             }
         });
+
     }
 }
