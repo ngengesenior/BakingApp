@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         simpleExoPlayerView = findViewById(R.id.playerView);
+
          exoPlayer = ExoPlayerFactory.newSimpleInstance(this,new DefaultTrackSelector());
         simpleExoPlayerView.setPlayer(exoPlayer);
         MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(videoURL),new DefaultDataSourceFactory(this,"BakingApp"),

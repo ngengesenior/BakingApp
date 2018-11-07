@@ -18,8 +18,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.MainActivity" />
-        <activity android:name=".ui.activities.RecipeDetailsActivity" />
-        <activity android:name=".ui.activities.RecipeDetailActivity" />
+        <activity android:name=".ui.activities.RecipeDetailsActivity"
+            android:parentActivityName=".ui.activities.RecipeListActivity"
+            android:theme="@style/AppTheme"
+            />
+        <activity android:name=".ui.activities.RecipeStepDetailActivity" />
     </application>
 
 </manifest>

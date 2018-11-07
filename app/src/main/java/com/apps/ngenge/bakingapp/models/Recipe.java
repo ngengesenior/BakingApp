@@ -1,11 +1,15 @@
 package com.apps.ngenge.bakingapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -25,6 +29,29 @@ public class Recipe {
     @SerializedName("image")
     @Expose
     private String image;
+
+    protected Recipe(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        ingredients = new ArrayList<Ingredient>();
+        in.readList(ingredients,Ingredient.class.getClassLoader());
+        steps = new ArrayList<Step>();
+        in.readList(steps,Ingredient.class.getClassLoader());
+        servings = in.readInt();
+        image = in.readString();
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -77,5 +104,20 @@ public class Recipe {
     @Override
     public String toString() {
         return "Recipe{" + "id=" + id + ", name='" + name + '\'' + ", ingredients=" + ingredients + ", steps=" + steps + ", servings=" + servings + ", image='" + image + '\'' + '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeList(ingredients);
+        dest.writeList(steps);
+        dest.writeInt(servings);
+        dest.writeString(image);
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/stepLayout"
+    android:layout_height="50dp"
+    xmlns:tools="http://schemas.android.com/tools">
+    <TextView
+        android:layout_width="wrap_content"
+        tools:text="Short Des"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:id="@+id/shortDescView"
+        android:layout_marginLeft="16dp"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+        android:layout_height="wrap_content" />
+
+
+
+</RelativeLayout>
