@@ -35,12 +35,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeStepDetailFragment extends Fragment {
+public class RecipeStepDetailFragmentTablet extends Fragment {
 
     private static final String PLAYER_POS ="PLAYER_POS";
     private static  long playerPos;
-    //static ArrayList<Step> stepArrayList;
-    private Step step;
+    static ArrayList<Step> stepArrayList;
     @BindView(R.id.exoPlayerView)
     PlayerView playerView;
     @BindView(R.id.stepDescription)
@@ -57,38 +56,30 @@ public class RecipeStepDetailFragment extends Fragment {
 
 
 
-    public RecipeStepDetailFragment() {
+    public RecipeStepDetailFragmentTablet() {
     }
 
-//    public static RecipeStepDetailFragment newInstance(List<Step> steps, int currentStepPosition) {
-//         stepArrayList = new ArrayList<>(steps);
-//        RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
-//        Bundle args = new Bundle();
-//        args.putParcelableArrayList(Utils.STEP_LIST_TAG, stepArrayList);
-//        args.putInt(Utils.CURRENT_POS_TAG, currentStepPosition);
-//        fragment.setArguments(args);
-//        return fragment;
-//
-//    }
-
-
-    public static RecipeStepDetailFragment newInstance(Step step) {
-
-        RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
+    public static RecipeStepDetailFragmentTablet newInstance(List<Step> steps, int currentStepPosition) {
+         stepArrayList = new ArrayList<>(steps);
+        RecipeStepDetailFragmentTablet fragment = new RecipeStepDetailFragmentTablet();
         Bundle args = new Bundle();
-        args.putParcelable(Utils.STEP_TAG,step);
+        args.putParcelableArrayList(Utils.STEP_LIST_TAG, stepArrayList);
+        args.putInt(Utils.CURRENT_POS_TAG, currentStepPosition);
         fragment.setArguments(args);
         return fragment;
 
     }
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            step = args.getParcelable(Utils.STEP_TAG);
-            //currentStepPosition = args.getInt(Utils.CURRENT_POS_TAG, 0);
+            stepArrayList = args.getParcelable(Utils.STEP_LIST_TAG);
+            currentStepPosition = args.getInt(Utils.CURRENT_POS_TAG, 0);
         }
     }
 
@@ -98,7 +89,7 @@ public class RecipeStepDetailFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_recipe_step_details, container, false);
         ButterKnife.bind(this,view);
-        stepsDescriptionView.setText(step.getDescription());
+        stepsDescriptionView.setText(stepArrayList.get(currentStepPosition).getDescription());
         return view;
 
     }
@@ -114,8 +105,8 @@ public class RecipeStepDetailFragment extends Fragment {
         player.setPlayWhenReady(playWhenReady);
         player.seekTo(currentWindow, playbackPosition);
 
-        togglePlayerViewVisibility(step.getVideoURL());
-        Uri uri = Uri.parse(step.getVideoURL());
+        togglePlayerViewVisibility(stepArrayList.get(currentStepPosition).getVideoURL());
+        Uri uri = Uri.parse(stepArrayList.get(currentStepPosition).getVideoURL());
         MediaSource mediaSource = buildMediaSource(uri);
         player.prepare(mediaSource, true, false);
     }
@@ -199,14 +190,5 @@ public class RecipeStepDetailFragment extends Fragment {
     }
 
 
-    private void moveToNextStep()
-    {
 
-
-    }
-
-    private void moveToPreviousStep()
-    {
-
-    }
 }

@@ -13,6 +13,7 @@ import com.apps.ngenge.bakingapp.adapters.RecipeStepsAdapter;
 import com.apps.ngenge.bakingapp.models.Recipe;
 import com.apps.ngenge.bakingapp.models.Step;
 import com.apps.ngenge.bakingapp.ui.fragments.RecipeStepDetailFragment;
+import com.apps.ngenge.bakingapp.ui.fragments.RecipeStepDetailFragmentTablet;
 import com.apps.ngenge.bakingapp.ui.fragments.RecipeStepsFragment;
 import com.apps.ngenge.bakingapp.utils.Utils;
 
@@ -68,8 +69,7 @@ RecipeStepsFragment.OnStepSelectedListener{
     public void onStepSelected(Step step) {
         if(isTablet)
         {
-            RecipeStepDetailFragment fragment = RecipeStepDetailFragment.newInstance(stepList,
-                    step.getId());
+            RecipeStepDetailFragment fragment = RecipeStepDetailFragment.newInstance(step);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.recipeStepDetailContainer,fragment)
