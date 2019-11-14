@@ -10,5 +10,5 @@ import retrofit2.http.GET;
 public interface MiriamRecipeService {
 
     @GET("/topher/2017/May/59121517_baking/baking.json")
-    public Call<List<Recipe>> listOfRecipes();
+    Call<List<Recipe>> listOfRecipes();
 }

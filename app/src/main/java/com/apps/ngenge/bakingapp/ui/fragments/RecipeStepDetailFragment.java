@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.apps.ngenge.bakingapp.R;
 import com.apps.ngenge.bakingapp.models.Step;
 import com.apps.ngenge.bakingapp.utils.Utils;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -38,6 +40,9 @@ import butterknife.ButterKnife;
 public class RecipeStepDetailFragment extends Fragment {
 
     private static final String PLAYER_POS ="PLAYER_POS";
+    private static final String KEY_AUTO_PLAY = "AUTO_PLAY" ;
+    private static final String KEY_WINDOW = "WINDOW" ;
+    private static final String KEY_POSITION = "POSITION";
     private static  long playerPos;
     //static ArrayList<Step> stepArrayList;
     private Step step;
@@ -52,6 +57,11 @@ public class RecipeStepDetailFragment extends Fragment {
     private int currentWindow;
     private long playbackPosition;
     private int currentStepPosition;
+    private long startPosition;
+    private int startWindow;
+    private boolean startAutoPlay;
+
+
 
 
 
@@ -111,12 +121,16 @@ public class RecipeStepDetailFragment extends Fragment {
 
         playerView.setPlayer(player);
 
-        player.setPlayWhenReady(playWhenReady);
-        player.seekTo(currentWindow, playbackPosition);
+        player.setPlayWhenReady(startAutoPlay);
+        //player.seekTo(currentWindow, playbackPosition);
 
         togglePlayerViewVisibility(step.getVideoURL());
         Uri uri = Uri.parse(step.getVideoURL());
         MediaSource mediaSource = buildMediaSource(uri);
+        boolean haveStartPosition = startWindow != C.INDEX_UNSET;
+        if (haveStartPosition) {
+            player.seekTo(startWindow, startPosition);
+        }
         player.prepare(mediaSource, true, false);
     }
 
@@ -142,7 +156,8 @@ public class RecipeStepDetailFragment extends Fragment {
     {
         if (videoUrl.equals("") || videoUrl.isEmpty())
         {
-            playerView.setVisibility(View.INVISIBLE);
+
+            playerView.setVisibility(View.GONE);
         }
 
         else playerView.setVisibility(View.VISIBLE);
@@ -190,23 +205,52 @@ public class RecipeStepDetailFragment extends Fragment {
 
     private void releasePlayer() {
         if (player != null) {
-            playbackPosition = player.getCurrentPosition();
+            /*playbackPosition = player.getCurrentPosition();
             currentWindow = player.getCurrentWindowIndex();
-            playWhenReady = player.getPlayWhenReady();
+            playWhenReady = player.getPlayWhenReady();*/
+            updateStartPosition();
             player.release();
             player = null;
         }
     }
 
 
-    private void moveToNextStep()
-    {
-
-
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            startAutoPlay = savedInstanceState.getBoolean(KEY_AUTO_PLAY);
+            startWindow = savedInstanceState.getInt(KEY_WINDOW);
+            startPosition = savedInstanceState.getLong(KEY_POSITION);
+        }
+        else {
+            clearStartPosition();
+        }
     }
 
-    private void moveToPreviousStep()
-    {
-
+    private void updateStartPosition() {
+        if (player != null) {
+            startAutoPlay = player.getPlayWhenReady();
+            startWindow = player.getCurrentWindowIndex();
+            startPosition = Math.max(0, player.getContentPosition());
+        }
     }
+
+
+    private void clearStartPosition() {
+        startAutoPlay = true;
+        startWindow = C.INDEX_UNSET;
+        startPosition = C.TIME_UNSET;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        updateStartPosition();
+        outState.putBoolean(KEY_AUTO_PLAY, startAutoPlay);
+        outState.putInt(KEY_WINDOW, startWindow);
+        outState.putLong(KEY_POSITION, startPosition);
+    }
+
 }

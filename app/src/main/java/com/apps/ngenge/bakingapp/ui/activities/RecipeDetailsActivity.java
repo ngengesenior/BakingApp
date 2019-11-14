@@ -2,25 +2,22 @@ package com.apps.ngenge.bakingapp.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.apps.ngenge.bakingapp.R;
-import com.apps.ngenge.bakingapp.adapters.RecipeStepsAdapter;
+import com.apps.ngenge.bakingapp.app_widget.WidgetUpdateIntentService;
 import com.apps.ngenge.bakingapp.models.Recipe;
 import com.apps.ngenge.bakingapp.models.Step;
 import com.apps.ngenge.bakingapp.ui.fragments.RecipeStepDetailFragment;
-import com.apps.ngenge.bakingapp.ui.fragments.RecipeStepDetailFragmentTablet;
 import com.apps.ngenge.bakingapp.ui.fragments.RecipeStepsFragment;
 import com.apps.ngenge.bakingapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
+import static com.apps.ngenge.bakingapp.utils.Utils.RECIPE_TAG;
 
 
 public class RecipeDetailsActivity extends AppCompatActivity implements
@@ -62,6 +59,7 @@ RecipeStepsFragment.OnStepSelectedListener{
 
         }
 
+        updateService();
     }
 
 
@@ -85,5 +83,14 @@ RecipeStepsFragment.OnStepSelectedListener{
             intent.putExtra(Utils.NAME_TAG,recipe.getName());
             startActivity(intent);
         }
+    }
+
+    void updateService() {
+        //Toast.makeText(this,"Service Started",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, WidgetUpdateIntentService.class);
+        intent.putExtra(RECIPE_TAG,recipe);
+        intent.setAction(WidgetUpdateIntentService.ACTION_RECIPE_UPDATE);
+        startService(intent);
+
     }
 }

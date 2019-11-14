@@ -1,6 +1,7 @@
 package com.apps.ngenge.bakingapp.database;
 
 import android.arch.persistence.room.Database;
+import android.arch.persistence.room.RoomDatabase;
 
 import com.apps.ngenge.bakingapp.database.dao.IngredientDao;
 import com.apps.ngenge.bakingapp.database.dao.RecipeDao;
@@ -10,7 +11,7 @@ import com.apps.ngenge.bakingapp.database.entity.RecipeEntity;
 import com.apps.ngenge.bakingapp.database.entity.StepEntity;
 
 @Database(entities = {StepEntity.class,IngredientEntity.class,RecipeEntity.class},version = 1)
-public abstract class RecipeDatabase {
+public abstract class RecipeDatabase extends RoomDatabase {
     public abstract StepDao stepDao();
     public abstract IngredientDao ingredientDao();
     public abstract RecipeDao recipeDao();
